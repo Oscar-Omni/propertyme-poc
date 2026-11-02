@@ -1,0 +1,12 @@
+base_view: propertyme_demo_mart_inspections
+label: PropertyMe Synthetic Inspections
+description: Illustrative PropertyMe POC synthetic demonstration. No customer data. Fixed
+  cutoff 2026-10-31. Repair spend is not revenue or profit.
+
+joins: {}
+
+ai_context: All data is illustrative synthetic, cutoff 2026-10-31;
+  repair_spend_aud is invoiced repair spend, never PropertyMe revenue or profit.
+  Ask a clarifying question for ambiguous requests such as worst contractor or
+  revenue; distinguish open age from completed cycle time and never infer
+  unsupported facts or actual SLA compliance.

@@ -1,0 +1,13 @@
+base_view: propertyme_demo_mart_jobs
+label: PropertyMe Synthetic Approval Hours
+description: Illustrative PropertyMe POC synthetic demonstration. No customer data. Fixed
+  cutoff 2026-10-31. Repair spend is not revenue or profit.
+
+joins: {}
+
+ai_context: All data is illustrative synthetic, cutoff 2026-10-31;
+  repair_spend_aud is invoiced repair spend, never revenue or profit. For
+  ambiguous requests such as worst contractor or revenue, first ask which metric
+  and period the user means, then STOP without querying, ranking, or choosing a
+  default until the user answers; open age differs from completed cycle time and
+  target hours are illustrative policy, not legal or customer SLA.

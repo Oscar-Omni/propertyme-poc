@@ -1,0 +1,15 @@
+.env
+.env.*
+*.pem
+*.key
+*.p8
+*.duckdb*
+__pycache__/
+.venv/
+data/
+load.sql
+manifest.json
+rendered-model/
+*receipt*
+*transcript*
+*notes*

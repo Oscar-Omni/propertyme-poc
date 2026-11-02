@@ -1,0 +1,68 @@
+# Reference this view as propertyme_demo_mart_agency_month
+label: Synthetic Agency Months
+description: Illustrative PropertyMe POC synthetic demonstration. No customer data. Fixed
+  cutoff 2026-10-31. Repair spend is not revenue or profit.
+
+sql: SELECT "SYNTHETIC_LABEL", "AGENCY_ID", "MONTH_START", "JOBS_CREATED",
+  "COMPLETED_JOBS", "REPAIR_SPEND_CENTS", "OPEN_JOBS", "PROPERTIES_MANAGED",
+  "JOBS_PER_100_PROPERTIES" FROM
+  DEMO_DATABASE.DEMO_SCHEMA.PROPERTYME_DEMO_MART_AGENCY_MONTH
+
+dimensions:
+  synthetic_label:
+    sql: '"SYNTHETIC_LABEL"'
+    label: Synthetic Label
+
+  agency_id:
+    sql: '"AGENCY_ID"'
+    label: Agency Id
+    format: ID
+
+  month_start:
+    sql: '"MONTH_START"'
+    label: Month Start
+
+  jobs_created:
+    sql: '"JOBS_CREATED"'
+    label: Jobs Created
+
+  completed_jobs:
+    sql: '"COMPLETED_JOBS"'
+    label: Completed Jobs
+
+  repair_spend_cents:
+    sql: '"REPAIR_SPEND_CENTS"'
+    label: Repair Spend Cents
+
+  open_jobs:
+    sql: '"OPEN_JOBS"'
+    label: Open Jobs
+
+  properties_managed:
+    sql: '"PROPERTIES_MANAGED"'
+    label: Properties Managed
+
+  jobs_per_100_properties:
+    sql: '"JOBS_PER_100_PROPERTIES"'
+    label: Jobs Per 100 Properties
+
+  row_key:
+    sql: ${agency_id} || '-' || ${month_start}
+    hidden: true
+    primary_key: true
+
+measures:
+  count:
+    label: Agency Months
+    aggregate_type: count
+
+  repair_spend_aud:
+    sql: ${repair_spend_cents} / 100.0
+    label: Repair Spend AUD
+    format: currency_2
+    aggregate_type: sum
+
+  jobs_total:
+    sql: ${jobs_created}
+    label: Jobs Created
+    aggregate_type: sum
