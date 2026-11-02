@@ -1,0 +1,45 @@
+# Reference this view as propertyme_nyc_taxi_685_main__trips
+catalog: propertyme_nyc_taxi_685
+schema: main
+table_name: trips
+
+dimensions:
+  tpep_pickup_datetime: {}
+  tpep_dropoff_datetime: {}
+  passenger_count: {}
+  trip_distance: {}
+  store_and_fwd_flag: {}
+  payment_type: {}
+  fare_amount: {}
+  extra: {}
+  mta_tax: {}
+  tip_amount: {}
+  tolls_amount: {}
+  improvement_surcharge: {}
+  total_amount: {}
+  congestion_surcharge: {}
+  airport_fee: {}
+
+  trip_id:
+    format: ID
+    primary_key: true
+
+  vendor_id:
+    sql: '"VendorID"'
+    format: ID
+
+  ratecode_id:
+    sql: '"RatecodeID"'
+    format: ID
+
+  pulocation_id:
+    sql: '"PULocationID"'
+    format: ID
+
+  dolocation_id:
+    sql: '"DOLocationID"'
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
