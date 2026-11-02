@@ -56,6 +56,8 @@ Compare counts and repair spend across the job, inspection and agency-month mart
 
 The AI context requests clarification of ambiguous metrics such as worst contractor before querying. Context is guidance, not a guarantee; verify actual behavior and retain failing cases. Role isolation, model promotion and performance should be tested separately in your approved environment.
 
+See [Maintenance native eval CI](MAINTENANCE-EVAL-CI.md) for the manual comparison workflow, required secret names, and offline checks. The native workflow remains disabled until verified prompt-set IDs and separately approved secrets are configured.
+
 ## Git integration
 
 This repository is a public source artifact. It does not itself grant an Omni instance GitHub access. Connect only an approved model path and repository-scoped integration after reviewing its requested permissions. Publish model/setup code only; keep credentials, generated data, customer notes, transcripts and internal material out of this repository.

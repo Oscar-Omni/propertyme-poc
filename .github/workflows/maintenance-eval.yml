@@ -1,0 +1,51 @@
+name: Maintenance native Omni eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: Existing Omni candidate branch, already synced in Omni
+        required: true
+        default: oscar/test
+        type: string
+      baseline_branch_name:
+        description: Existing Omni baseline branch; leave empty for live shared model
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maintenance-native-omni-eval
+  cancel-in-progress: false
+
+jobs:
+  eval:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Run native accuracy comparison
+        env:
+          OMNI_BASE_URL: ${{ secrets.OMNI_BASE_URL }}
+          OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
+          BRANCH_NAME: ${{ inputs.branch_name }}
+          BASELINE_BRANCH_NAME: ${{ inputs.baseline_branch_name }}
+        run: python .github/scripts/omni_eval.py
+      - name: Upload sanitized diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: maintenance-eval-${{ github.run_id }}
+          path: omni-eval-artifacts/
+          if-no-files-found: warn
+          retention-days: 7

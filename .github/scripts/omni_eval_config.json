@@ -1,0 +1,24 @@
+{
+  "enabled": false,
+  "api_base_url": "https://propertyme-poc.omniapp.co/api",
+  "model_id": "2adbbe65-82d1-4c75-914d-9a8b32db3a3d",
+  "candidate_branch_name": "oscar/test",
+  "template_commit": "8e027501cf87f462af283f488c5ec5ad0c3f342f",
+  "prompt_sets": [
+    {
+      "id": null,
+      "slug": "maintenance-oscar-test-ambiguity-v1",
+      "prompt_count": 7
+    },
+    {
+      "id": null,
+      "slug": "maintenance-oscar-test-controls-v1",
+      "prompt_count": 5
+    },
+    {
+      "id": null,
+      "slug": "maintenance-oscar-test-clarified-v1",
+      "prompt_count": 4
+    }
+  ]
+}
