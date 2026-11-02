@@ -158,6 +158,13 @@ measures:
     description: Sum of bill counts across jobs.
     aggregate_type: sum
 
+  illustrative_target_hours_95th_percentile:
+    sql: ${propertyme_poc_685_main__propertyme_demo_mart_jobs.illustrative_target_hours}
+    description: "(Percentile) Illustrative Target Hours: Illustrative (synthetic)
+      target hours to complete the job."
+    aggregate_type: percentile
+    percentile: 95
+
 ai_context: "Grain is one row per job (job_id). Statuses: awaiting_approval,
   in_progress, completed. Cycle/approval times are in hours. Spend is in cents;
   use Total Repair Spend ($) for dollars. missing_invoice and repeat_repair are
