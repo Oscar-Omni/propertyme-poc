@@ -1,0 +1,3 @@
+base_view: propertyme_nyc_taxi_685_main__trips
+label: Trips
+description: NYC taxi trips with fares, tips, distances, and pickup and dropoff details.
