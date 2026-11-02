@@ -134,6 +134,7 @@ def execute_run(client, model_id, set_id, branch_id, expected, evidence, active,
     deadline, completed_at, interval = time.monotonic() + timeout, None, 5
     while True:
         try:
+            require(identifier(run['id']) == run_id, 'Polled run ID differs from the created run ID')
             settled = validate_run(run, model_id, set_id, branch_id, expected)
         except EvalError:
             evidence[-1]['validation_failed'] = True

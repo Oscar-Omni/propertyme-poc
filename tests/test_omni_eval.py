@@ -29,8 +29,14 @@ def run(score=1, state='COMPLETE', branch=BRANCH):
 
 class NativeEvalContractTests(unittest.TestCase):
     def test_regression_fails_even_when_other_prompts_improve(self):
-        self.assertTrue(eval_runner.compare(run(branch=None), run(score=0))[0]['regressed'])
-        self.assertFalse(eval_runner.compare(run(score=0, branch=None), run())[0]['regressed'])
+        baseline, candidate = run(branch=None), run(score=0)
+        for number in (7, 8):
+            prompt_id = f'00000000-0000-0000-0000-{number:012d}'
+            baseline['results'].append({'eval_prompt_id': prompt_id, 'score': 0})
+            candidate['results'].append({'eval_prompt_id': prompt_id, 'score': 1})
+        rows = eval_runner.compare(baseline, candidate)
+        self.assertGreater(sum(r['candidate'] for r in rows), sum(r['baseline'] for r in rows))
+        self.assertEqual([r['prompt_id'] for r in rows if r['regressed']], [PROMPT])
 
     def test_preexisting_failure_is_not_a_regression(self):
         self.assertFalse(eval_runner.compare(run(score=0, branch=None), run(score=0))[0]['regressed'])
@@ -65,6 +71,22 @@ class NativeEvalContractTests(unittest.TestCase):
         self.assertEqual(active, set())
         self.assertEqual(client.calls[0][2]['run_config']['branch_id'], BRANCH)
         self.assertNotIn('private', json.dumps(evidence))
+
+    def test_polling_rejects_a_different_run_id(self):
+        class Client:
+            def call(self, method, *args):
+                if method == 'POST':
+                    return {'job_count': 1, 'run': run(score=None)}
+                unexpected = run()
+                unexpected['id'] = SET
+                return {'run': unexpected}
+        evidence, active = [], set()
+        with patch.object(eval_runner.time, 'sleep'):
+            with self.assertRaisesRegex(eval_runner.EvalError, 'run ID'):
+                eval_runner.execute_run(Client(), MODEL, SET, BRANCH, EXPECTED, evidence, active)
+        self.assertEqual(active, {RUN})
+        self.assertEqual(evidence[-1]['id'], RUN)
+        self.assertTrue(evidence[-1]['validation_failed'])
 
     def test_missing_scores_exhaust_grace_as_failure(self):
         class Client:
