@@ -1,4 +1,9 @@
 # Reference this view as propertyme_poc_685_main__propertyme_demo_mart_jobs
+label: Maintenance Jobs
+description: One row per maintenance job (synthetic PropertyMe demo data) with
+  agency, supplier, quote/bill counts, repair spend, and cycle-time metrics.
+  Spend is stored in cents.
+
 catalog: propertyme_poc_685
 schema: main
 table_name: PROPERTYME_DEMO_MART_JOBS
@@ -14,6 +19,7 @@ dimensions:
   job_id:
     sql: '"JOB_ID"'
     format: ID
+    primary_key: true
 
   property_id:
     sql: '"PROPERTY_ID"'
@@ -39,6 +45,8 @@ dimensions:
 
   status:
     sql: '"STATUS"'
+    description: "Job lifecycle status: awaiting_approval, in_progress, completed."
+    sample_values: [ awaiting_approval, in_progress, completed ]
 
   created_at:
     sql: '"CREATED_AT"'
@@ -51,6 +59,7 @@ dimensions:
 
   illustrative_target_hours:
     sql: '"ILLUSTRATIVE_TARGET_HOURS"'
+    description: Illustrative (synthetic) target hours to complete the job.
 
   manager_id:
     sql: '"MANAGER_ID"'
@@ -64,6 +73,8 @@ dimensions:
 
   repair_spend_cents:
     sql: '"REPAIR_SPEND_CENTS"'
+    description: Repair spend for the job in cents.
+    hidden: true
 
   bill_count:
     sql: '"BILL_COUNT"'
@@ -73,19 +84,81 @@ dimensions:
 
   age_at_cutoff_hours:
     sql: '"AGE_AT_CUTOFF_HOURS"'
+    description: Hours since creation as of the data cutoff, for open jobs.
 
   completed_cycle_hours:
     sql: '"COMPLETED_CYCLE_HOURS"'
+    description: Hours from job creation to completion (completed jobs only).
 
   approval_hours:
     sql: '"APPROVAL_HOURS"'
+    description: Hours from job creation to approval.
 
   missing_invoice:
     sql: '"MISSING_INVOICE"'
+    description: 1 if the completed job has no supplier invoice/bill, else 0.
 
   repeat_repair:
     sql: '"REPEAT_REPAIR"'
+    description: 1 if the job is a repeat repair for the same issue, else 0.
 
 measures:
   count:
     aggregate_type: count
+
+  total_repair_spend:
+    sql: SUM(${repair_spend_cents}) / 100.0
+    format: usdcurrency_0
+    description: Total repair spend in dollars.
+
+  avg_repair_spend:
+    sql: SUM(${repair_spend_cents}) / 100.0 / NULLIF(COUNT(${job_id}), 0)
+    format: usdcurrency_2
+    description: Average repair spend per job in dollars.
+
+  avg_completed_cycle_hours:
+    sql: ${completed_cycle_hours}
+    format: number_1
+    description: Average hours from creation to completion.
+    aggregate_type: average
+
+  avg_approval_hours:
+    sql: ${approval_hours}
+    format: number_1
+    description: Average hours to approval.
+    aggregate_type: average
+
+  missing_invoice_jobs:
+    sql: ${missing_invoice}
+    description: Number of jobs flagged as missing an invoice.
+    aggregate_type: sum
+
+  missing_invoice_rate:
+    sql: SUM(${missing_invoice}) * 1.0 / NULLIF(COUNT(${job_id}), 0)
+    format: percent_1
+    description: Share of jobs missing an invoice.
+
+  repeat_repair_jobs:
+    sql: ${repeat_repair}
+    description: Number of repeat-repair jobs.
+    aggregate_type: sum
+
+  repeat_repair_rate:
+    sql: SUM(${repeat_repair}) * 1.0 / NULLIF(COUNT(${job_id}), 0)
+    format: percent_1
+    description: Share of jobs that are repeat repairs.
+
+  total_quotes:
+    sql: ${quote_count}
+    description: Sum of quote counts across jobs.
+    aggregate_type: sum
+
+  total_bills:
+    sql: ${bill_count}
+    description: Sum of bill counts across jobs.
+    aggregate_type: sum
+
+ai_context: "Grain is one row per job (job_id). Statuses: awaiting_approval,
+  in_progress, completed. Cycle/approval times are in hours. Spend is in cents;
+  use Total Repair Spend ($) for dollars. missing_invoice and repeat_repair are
+  0/1 flags."
