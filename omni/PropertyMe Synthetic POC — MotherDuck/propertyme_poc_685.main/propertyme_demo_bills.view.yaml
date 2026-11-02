@@ -1,0 +1,37 @@
+# Reference this view as propertyme_poc_685_main__propertyme_demo_bills
+catalog: propertyme_poc_685
+schema: main
+table_name: PROPERTYME_DEMO_BILLS
+
+dimensions:
+  synthetic_label:
+    sql: '"SYNTHETIC_LABEL"'
+
+  agency_id:
+    sql: '"AGENCY_ID"'
+    format: ID
+
+  bill_id:
+    sql: '"BILL_ID"'
+    format: ID
+
+  job_id:
+    sql: '"JOB_ID"'
+    format: ID
+
+  supplier_id:
+    sql: '"SUPPLIER_ID"'
+    format: ID
+
+  billed_at:
+    sql: '"BILLED_AT"'
+
+  total_cents:
+    sql: '"TOTAL_CENTS"'
+
+  currency:
+    sql: '"CURRENCY"'
+
+measures:
+  count:
+    aggregate_type: count

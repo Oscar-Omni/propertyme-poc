@@ -1,0 +1,19 @@
+# Reference this view as propertyme_poc_685_main__propertyme_demo_agencies
+catalog: propertyme_poc_685
+schema: main
+table_name: PROPERTYME_DEMO_AGENCIES
+
+dimensions:
+  synthetic_label:
+    sql: '"SYNTHETIC_LABEL"'
+
+  agency_id:
+    sql: '"AGENCY_ID"'
+    format: ID
+
+  agency_name:
+    sql: '"AGENCY_NAME"'
+
+measures:
+  count:
+    aggregate_type: count

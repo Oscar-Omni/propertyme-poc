@@ -1,0 +1,30 @@
+# Reference this view as propertyme_poc_685_main__propertyme_demo_status_events
+catalog: propertyme_poc_685
+schema: main
+table_name: PROPERTYME_DEMO_STATUS_EVENTS
+
+dimensions:
+  synthetic_label:
+    sql: '"SYNTHETIC_LABEL"'
+
+  agency_id:
+    sql: '"AGENCY_ID"'
+    format: ID
+
+  event_id:
+    sql: '"EVENT_ID"'
+    format: ID
+
+  job_id:
+    sql: '"JOB_ID"'
+    format: ID
+
+  status:
+    sql: '"STATUS"'
+
+  occurred_at:
+    sql: '"OCCURRED_AT"'
+
+measures:
+  count:
+    aggregate_type: count
