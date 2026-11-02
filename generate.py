@@ -206,14 +206,19 @@ def literal(value):
     return "'"+str(value).replace("'","''")+"'"
 
 ddl = []
+duck_ddl = []
 for name,t in tables.items():
     filename = ROOT / "data" / (name+".csv")
     with filename.open('w') as f:
         w=csv.writer(f);w.writerow([n for n,_ in t['columns']]);w.writerows(t['rows'])
     full = DATABASE+"."+SCHEMA+"."+PREFIX+name.upper()
     ddl.append(f"CREATE TABLE {full} ({','.join(n.upper()+' '+('NUMBER(38,0)' if ty=='HUGEINT' else ty) for n,ty in t['columns'])}) COMMENT='Illustrative synthetic inspection-to-repair demo; seed 68542; cutoff 2026-10-31; no customer data';")
+    duck_full = "main."+PREFIX+name.upper()
+    duck_ddl.append(f"CREATE TABLE {duck_full} ({','.join(n.upper()+' '+ty for n,ty in t['columns'])});")
     for start in range(0,len(t['rows']),200):
         ddl.append(f"INSERT INTO {full} VALUES "+','.join('('+','.join(literal(v) for v in row)+')' for row in t['rows'][start:start+200])+';')
+        duck_ddl.append(f"INSERT INTO {duck_full} VALUES "+','.join('('+','.join(literal(v) for v in row)+')' for row in t['rows'][start:start+200])+';')
+(ROOT / "load-duckdb.sql").write_text('\n'.join(duck_ddl))
 (ROOT / "load.sql").write_text('\n'.join(ddl))
 manifest = {"synthetic":True,"confirmed_customer_requirements":False,"seed":68542,"cutoff":CUTOFF.isoformat(),"start":START.isoformat(),
             "namespace":DATABASE+"."+SCHEMA+"."+PREFIX,"row_counts":{n:len(t['rows']) for n,t in tables.items()},

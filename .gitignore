@@ -8,6 +8,9 @@ __pycache__/
 .venv/
 data/
 load.sql
+load-duckdb.sql
+motherduck-upload.sql
+motherduck-local-validation.json
 manifest.json
 rendered-model/
 *receipt*
